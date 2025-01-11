@@ -42,3 +42,5 @@ env/
 # Project specific
 *.log
 .env
+
+# Gin
