@@ -8,6 +8,7 @@ This repository contains multiple services for search functionality.
 - Text intent classification service
 - Query vectorization
 - FastAPI backend service
+- [xlm-roberta-large-xnli](https://huggingface.co/joeddav/xlm-roberta-large-xnli) model license MIT
 
 ### [Search Recognition API](/recommendation/README.md)
 - Search by text
