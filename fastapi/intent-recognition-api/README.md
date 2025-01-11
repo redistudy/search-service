@@ -52,8 +52,8 @@ Once the application is running, you can access the API at `http://127.0.0.1:800
 
 ## Endpoints
 
-- **POST /intent**: Classifies the intent based on the provided input data.
-
+- **POST /recognize-intent**: Classifies the intent based on the provided input data.
+- **POST /vectorized-text**: Converts text queries into dense vector embeddings
 ## Testing
 
 To run the tests, use the following command:
