@@ -9,6 +9,10 @@ This repository contains multiple services for search functionality.
 - Query vectorization
 - FastAPI backend service
 
+### [Search Recognition API](/recommendation/README.md)
+- Search by text
+- Gin backend service
+
 ## Project Structure
 - vector, intent (fastapi)
 - search application (go-gin)

@@ -1,8 +1,0 @@
-FastAPI
-uvicorn
-pydantic
-numpy
-scikit-learn
-protobuf
-tiktoken
-sentencepiece
