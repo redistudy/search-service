@@ -15,3 +15,9 @@ class SearchRequest(BaseModel):
 
 class SearchResponse(BaseModel):
     vector: list[float]
+
+class SearchQueryRequest(BaseModel):
+    text: str
+
+class SearchQueryResponse(BaseModel):
+    query: str
