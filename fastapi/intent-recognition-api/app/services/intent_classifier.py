@@ -1,6 +1,7 @@
 from transformers import pipeline
 from typing import Dict, List
 from app.services.model import model
+from app.services.query.query_factory import QueryFactory
 
 class IntentClassifier:
     def __init__(self):
@@ -27,8 +28,16 @@ class IntentClassifier:
                 "intent": "unknown",
                 "confidence": 0.0
             }
-
+    def generate_query_by_intent(self, intent: str) -> Dict[str, str]:
+        query_generator = QueryFactory.create_query(intent)
+        return query_generator.generate_query(intent)
+    
 intent_classifier = IntentClassifier()
 
 def classify_intent(input_data: str) -> Dict[str, List[str]]:
     return intent_classifier.classify_intent(input_data)
+
+def generate_query_by_intent(intent: str) -> Dict[str, str]:
+    query = intent_classifier.generate_query_by_intent(intent)
+    print('query:', query)
+    return {'query' : query}
