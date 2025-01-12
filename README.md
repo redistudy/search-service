@@ -2,8 +2,6 @@
 
 This repository contains multiple services for search functionality.
 
-## System Flow
-
 
 ## System Flow
 ```mermaid
