@@ -29,7 +29,7 @@ ntent-recognition-api/
 └── README.md               
 
 ## Setup Instructions
-
+```
 1. Clone the repository:
    ```
    git clone <repository-url>
