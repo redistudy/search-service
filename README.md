@@ -2,6 +2,24 @@
 
 This repository contains multiple services for search functionality.
 
+## System Flow
+
+
+## System Flow
+```mermaid
+sequenceDiagram
+    Client->>Go Gin: POST /search (text)
+    Go Gin->>FastAPI: POST /query (text)
+    FastAPI->>FastAPI: Classify Intent
+    FastAPI->>FastAPI: Generate Query
+    FastAPI-->>Go Gin: Return Query Template
+    Go Gin->>Elasticsearch: Execute Query
+    Elasticsearch-->>Go Gin: Search Results
+    Go Gin-->>Client: Return Results
+
+## Project Structure
+```
+
 ## Projects
 
 ### [Intent Recognition API](/fastapi/intent-recognition-api/README.md)
