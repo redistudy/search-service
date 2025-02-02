@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter
 from app.models.intent import IntentRequest, IntentResponse, SearchRequest, SearchResponse, SearchQueryRequest, SearchQueryResponse
 from app.services.intent_classifier import generate_query_by_intent, classify_intent
@@ -17,6 +18,5 @@ async def vectorized_text(request: SearchRequest):
 @router.post("/query", response_model=SearchQueryResponse)
 async def get_query(request: SearchQueryRequest):
     intent = classify_intent(request.text)
-    print("intent : ", intent['intent'])
     query = generate_query_by_intent(intent['intent'])
-    return query
+    return SearchQueryResponse(script=json.dumps(query))

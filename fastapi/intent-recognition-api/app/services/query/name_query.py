@@ -11,7 +11,7 @@ class NameQuery(QueryInterface):
             "query": {
             "script_score": {
                 "query": {
-                "match_all": {}  # 모든 문서에서 스코어 기반 필터링
+                "match_all": {}
                 },
                 "script": {
                 "source": """
@@ -22,8 +22,8 @@ class NameQuery(QueryInterface):
                 """,
                 "params": {
                     "query_vector": query_embedding,
-                    "title_weight": 1.0,  # 기본 가중치 값
-                    "address_weight": 0.0  # 기본 가중치 값
+                    "title_weight": 1.0, 
+                    "address_weight": 0.0
                 }
                 }
             }

@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from pydantic import BaseModel
 
 # 인텐트 검색 Request
@@ -20,4 +21,4 @@ class SearchQueryRequest(BaseModel):
     text: str
 
 class SearchQueryResponse(BaseModel):
-    query: str
+    script: str
