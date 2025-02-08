@@ -1,3 +1,4 @@
+from sentence_transformers import SentenceTransformer
 from transformers import pipeline
 
 class Model:
@@ -7,11 +8,8 @@ class Model:
             model="joeddav/xlm-roberta-large-xnli",
             device=-1
         )
-        self.vectorizer = pipeline(
-            task="feature-extraction",
-            model="joeddav/xlm-roberta-large-xnli",
-            device=-1
-        )
+        self.vectorizer = SentenceTransformer('BAAI/bge-m3')
+    
     def load_model(self):
         return self.classifier
     
