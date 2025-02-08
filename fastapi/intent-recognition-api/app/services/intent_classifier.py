@@ -1,3 +1,4 @@
+import json
 from transformers import pipeline
 from typing import Dict, List
 from app.services.model import model
@@ -39,5 +40,4 @@ def classify_intent(input_data: str) -> Dict[str, List[str]]:
 
 def generate_query_by_intent(intent: str) -> Dict[str, str]:
     query = intent_classifier.generate_query_by_intent(intent)
-    print('query:', query)
-    return {'query' : query}
+    return query
