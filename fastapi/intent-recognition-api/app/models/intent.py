@@ -21,4 +21,4 @@ class SearchQueryRequest(BaseModel):
     text: str
 
 class SearchQueryResponse(BaseModel):
-    script: str
+    script: Dict[str, Any]

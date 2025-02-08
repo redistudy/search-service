@@ -13,12 +13,10 @@ class QueryVectorizer:
             raise HTTPException(status_code=400, detail="Query is empty.")
 
         # query를 벡터로 변환
-        embeddings = self.classifier(text)
-        vector = np.mean(embeddings[0], axis = 0).tolist()
-        print(len(vector))
+        embeddings = self.classifier.encode(text, normalize = True)
         # 결과 반환 (JSON)
         return {
-            "vector": vector
+            "vector": embeddings.tolist()
         }
 
 query_vectorizer = QueryVectorizer()

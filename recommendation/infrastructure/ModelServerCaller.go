@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	embedQueryUrl             = "http://127.0.0.1:8000/embed/query"
+	embedQueryUrl             = "http://127.0.0.1:8000/vectorized-text"
+	getQueryByIntentUrl       = "http://127.0.0.1:8000/query"
 	ModelServerCallerInit     sync.Once
 	modelServerCallerInstance *modelServiceCaller
 )
@@ -17,6 +18,7 @@ var (
 type (
 	ModelServiceCaller interface {
 		CallEmbedQuery(query *RequestEmbedQuery) ResponseEmbedQuery
+		CallQueryByIntent(query *RequestScriptQuery) ResponseScriptQuery
 	}
 
 	modelServiceCaller struct {
@@ -44,6 +46,26 @@ func (m modelServiceCaller) CallEmbedQuery(request *RequestEmbedQuery) ResponseE
 	}
 	var responseDTO ResponseEmbedQuery
 	parsingDto(&responseDTO, body)
+	return responseDTO
+}
+
+func (m modelServiceCaller) CallQueryByIntent(query *RequestScriptQuery) ResponseScriptQuery {
+	req := jsonMarshall(query)
+	res, err := http.Post(getQueryByIntentUrl, "application/json", bytes.NewBuffer(req))
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		panic(err)
+	}
+	var responseDTO ResponseScriptQuery
+	err = json.Unmarshal(body, &responseDTO)
+	if err != nil {
+		panic(err)
+	}
 	return responseDTO
 }
 

@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
+	"recommendation/dto"
+	"recommendation/infrastructure"
+	"sync"
+
 	"github.com/elastic/go-elasticsearch/v8"
 	log "github.com/sirupsen/logrus"
-	"recommendation/dto"
-	"sync"
 )
 
 var (
@@ -18,7 +19,7 @@ var (
 
 type (
 	PoiRepository interface {
-		SearchPoiByTitle(c context.Context, titleVector []float64, indexName string) []dto.PoiEntity
+		SearchPoiByTitle(c context.Context, titleVector []float64, scriptQuery infrastructure.ResponseScriptQuery, indexName string) []dto.PoiEntity
 	}
 	poiRepository struct {
 		client *elasticsearch.Client
@@ -34,26 +35,15 @@ func NewPoiRepository(client *elasticsearch.Client) PoiRepository {
 	return poiRepositoryInstance
 }
 
-func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64, indexName string) []dto.PoiEntity {
-	query := fmt.Sprintf(`{
-    "_source" : ["title", "address", "location"],
-    "query": {
-        "script_score": {
-            "query": {
-                "match_all": {}
-            },
-            "script": {
-                "source": "cosineSimilarity(params.query_vector, 'title_vector') + cosineSimilarity(params.query_vector, 'address_vector')",
-                "params": {
-                    "query_vector": %s
-                }
-            }
-        }
-    }
-}`, marshalJson(titleVector))
+func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64, script infrastructure.ResponseScriptQuery, indexName string) []dto.PoiEntity {
+
+	script.Script.Query.ScriptScore.Script.Params.QueryVector = titleVector
+	script.Script.Source = []string{"title", "address", "location"}
+	reqBody := marshalJson(script.Script)
+	log.Printf("Serialized request body: %s", reqBody)
 	res, err := poiRepositoryInstance.client.Search(
 		poiRepositoryInstance.client.Search.WithContext(c),
-		poiRepositoryInstance.client.Search.WithBody(bytes.NewReader([]byte(query))),
+		poiRepositoryInstance.client.Search.WithBody(bytes.NewReader(reqBody)),
 		poiRepositoryInstance.client.Search.WithIndex(indexName),
 		poiRepositoryInstance.client.Search.WithTrackTotalHits(true),
 	)
@@ -63,15 +53,16 @@ func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64
 	}
 	defer res.Body.Close()
 	if res.IsError() {
-		log.Printf("Error: %v", res.String())
+		log.Printf("Error: %+v", res.String())
 	}
 
-	// 응답 분문 파싱
+	// 응답 분문 파싱 및 로깅
 	var response map[string]interface{}
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		log.Printf("Failed to decode response : %v", err)
 		return nil
 	}
+	log.Printf("Response: %+v", response)
 
 	// 결과 처리
 
