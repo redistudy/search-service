@@ -46,6 +46,16 @@ func (h ElasticsearchHooker) Fire(entry *logrus.Entry) error {
 		"message":    entry.Message,
 		"fields":     entry.Data,
 	}
+
+	// entry.Message가 JSON 포맷인지 확인하고 title 필드 추출
+	var messageMap map[string]interface{}
+	if err := json.Unmarshal([]byte(entry.Message), &messageMap); err == nil {
+		if title, ok := messageMap["title"]; ok {
+			doc["keyword"] = title
+			print(title)
+		}
+	}
+
 	docBytes, err := json.Marshal(doc)
 	if err != nil {
 		return err

@@ -40,7 +40,6 @@ func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64
 	script.Script.Query.ScriptScore.Script.Params.QueryVector = titleVector
 	script.Script.Source = []string{"title", "address", "location"}
 	reqBody := marshalJson(script.Script)
-	log.Printf("Serialized request body: %s", reqBody)
 	res, err := poiRepositoryInstance.client.Search(
 		poiRepositoryInstance.client.Search.WithContext(c),
 		poiRepositoryInstance.client.Search.WithBody(bytes.NewReader(reqBody)),
@@ -53,16 +52,15 @@ func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64
 	}
 	defer res.Body.Close()
 	if res.IsError() {
-		log.Printf("Error: %+v", res.String())
+		log.Errorf("Error: %+v", res.String())
 	}
 
 	// 응답 분문 파싱 및 로깅
 	var response map[string]interface{}
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
-		log.Printf("Failed to decode response : %v", err)
+		log.Errorf("Failed to decode response : %v", err)
 		return nil
 	}
-	log.Printf("Response: %+v", response)
 
 	// 결과 처리
 	hits := response["hits"].(map[string]interface{})["hits"].([]interface{})
@@ -71,12 +69,12 @@ func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64
 		source := hit.(map[string]interface{})["_source"]
 		sourceJSON, err := json.Marshal(source)
 		if err != nil {
-			log.Printf("Failed to marshal source : %v", err)
+			log.Errorf("Failed to marshal source : %v", err)
 			continue
 		}
 		var esResp dto.PoiEntity
 		if err := json.Unmarshal(sourceJSON, &esResp); err != nil {
-			log.Printf("Failed to unmarshal source : %v", err)
+			log.Errorf("Failed to unmarshal source : %v", err)
 			continue
 		}
 		poiList = append(poiList, esResp)
@@ -87,7 +85,7 @@ func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64
 func marshalJson(v any) []byte {
 	marshal, err := json.Marshal(v)
 	if err != nil {
-		log.Error("error", err.Error())
+		log.Errorf("error : %v", err.Error())
 	}
 	return marshal
 }

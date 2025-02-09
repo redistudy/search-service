@@ -45,6 +45,9 @@ func WithTrace(ctx *gin.Context) *log.Entry {
 	if spanID := ctx.Request.Header.Get("X-Span-ID"); spanID != "" {
 		fields["span_id"] = spanID
 	}
+	if userId := ctx.Request.Header.Get("X-User-ID"); userId != "" {
+		fields["user_id"] = userId
+	}
 
 	return log.WithFields(fields)
 }
@@ -99,7 +102,7 @@ func RequestLoggerMiddleware() gin.HandlerFunc {
 			"latency":     time.Since(start).String(),
 			"queryParams": c.Request.URL.Query(),
 			"headers":     c.Request.Header,
-			"body":        string(requestBodyBytes),
+			"body":        requestBodyBytes,
 		}).Info("API Request")
 	}
 }
