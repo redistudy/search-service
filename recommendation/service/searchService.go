@@ -47,7 +47,7 @@ func NewSearchService(repository repository.PoiRepository,
 func (s *searchService) SearchTitle(c context.Context, title string) []dto.PoiEntity {
 	embedResponse := s.getVector(c, title)
 	scriptQuery := s.getQueryByIntent(title)
-	return s.repository.SearchPoiByTitle(c, embedResponse.Vector, scriptQuery, "vector_poi")
+	return s.repository.SearchPoiByTitle(c, embedResponse.Vector, scriptQuery, "vector_poi_v2")
 }
 
 func (s *searchService) getVector(c context.Context, title string) infrastructure.ResponseEmbedQuery {
