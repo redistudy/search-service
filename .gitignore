@@ -43,4 +43,8 @@ env/
 *.log
 .env
 
-# Gin
+# data pipeline
+/llm
+
+# docs
+/study
