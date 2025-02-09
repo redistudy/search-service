@@ -28,7 +28,10 @@ type (
 *
 SearachService 생성 메서드
 */
-func NewSearchService(repository repository.PoiRepository, embeddingServer infrastructure.ModelServiceCaller) SearchService {
+func NewSearchService(repository repository.PoiRepository,
+	recommendationRepository repository.RecommendationRepsoitory,
+	embeddingServer infrastructure.ModelServiceCaller) SearchService {
+
 	searchServiceInit.Do(func() {
 		searchServiceInstance = &searchService{
 			repository:      repository,

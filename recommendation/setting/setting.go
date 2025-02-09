@@ -1,9 +1,10 @@
 package setting
 
 import (
-	"github.com/spf13/viper"
 	"strings"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Configuration struct {
@@ -36,6 +37,14 @@ type LogSettingS struct {
 type DatabaseSettingS struct {
 	Address  string `mapstructure:"address"`
 	IdleHost int    `mapstructure:"idleHost"`
+	Redis    Redis  `mapstructure:"redis"`
+}
+
+type Redis struct {
+	Address  string `mapstruct:"address"`
+	Db       int    `mapstruct:"db"`
+	Username string `mapstruct:"username"`
+	Password string `mapstruct:"password"`
 }
 
 func LoadConfig(cfg *Configuration) error {

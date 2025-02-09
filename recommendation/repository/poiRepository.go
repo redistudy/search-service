@@ -65,7 +65,6 @@ func (p poiRepository) SearchPoiByTitle(c context.Context, titleVector []float64
 	log.Printf("Response: %+v", response)
 
 	// 결과 처리
-
 	hits := response["hits"].(map[string]interface{})["hits"].([]interface{})
 	var poiList []dto.PoiEntity
 	for _, hit := range hits {

@@ -9,6 +9,7 @@ import (
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,7 +20,7 @@ type Server struct {
 	DB     *elasticsearch.Client
 }
 
-func NewServer(cfg *setting.Configuration, client *elasticsearch.Client) *Server {
+func NewServer(cfg *setting.Configuration, client *elasticsearch.Client, redisClient *redis.Client) *Server {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
@@ -39,7 +40,7 @@ func NewServer(cfg *setting.Configuration, client *elasticsearch.Client) *Server
 		DB:     client,
 	}
 
-	api.SetRouters(r, cfg, client)
+	api.SetRouters(r, cfg, client, redisClient)
 
 	// hooking middleware
 	logger.SetLoggerHooking(r)

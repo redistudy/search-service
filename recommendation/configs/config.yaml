@@ -1,5 +1,10 @@
 Database:
   address: "http://localhost:9200"
+  redis:
+    address: "localhost:6379"
+    db: 0
+    username: 
+    password: 
 Server:
   HTTPPort: 8080
 
