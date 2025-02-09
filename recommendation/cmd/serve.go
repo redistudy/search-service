@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"net"
 	"net/http"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -37,6 +39,13 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
+		// init recommendation db
+		recommendationEngine, err := recommendationDbInit(&config.Database)
+		if err != nil {
+			log.Error("init recommendation db failed.", err)
+			return
+		}
+
 		// init logger
 		logger.SetupLogger(
 			filepath.Join(
@@ -48,7 +57,7 @@ var rootCmd = &cobra.Command{
 			config.Log.Level, engine)
 
 		// start http server
-		svr := server.NewServer(&config, engine)
+		svr := server.NewServer(&config, engine, recommendationEngine)
 		if err := svr.Start(); err != nil {
 			log.Error("init server failed.", err)
 			return
@@ -80,4 +89,18 @@ func dbInit(dbc *setting.DatabaseSettingS) (*elasticsearch.Client, error) {
 		},
 	}
 	return elasticsearch.NewClient(config)
+}
+
+func recommendationDbInit(dbc *setting.DatabaseSettingS) (*redis.Client, error) {
+	// var err error
+	client := redis.NewClient(&redis.Options{
+		Addr:     dbc.Redis.Address,
+		DB:       dbc.Redis.Db,
+		Username: dbc.Redis.Username,
+		Password: dbc.Redis.Password,
+	})
+	if err := client.Ping(context.Background()).Err(); err != nil {
+		return nil, err
+	}
+	return client, nil
 }
