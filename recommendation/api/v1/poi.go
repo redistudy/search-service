@@ -40,9 +40,9 @@ func (p poiController) SearchPoi(ctx *gin.Context) {
 		return
 	}
 	req := ctx.Request.Context()
-	logger.WithTrace(ctx).Info("request In : ", parsingJsonMarshal(searchRequest))
+	logger.WithTrace(ctx).Info(parsingJsonMarshal(searchRequest))
 	response := p.searchService.SearchTitle(req, searchRequest.Title)
-	if len(response) == 0 {
+	if len(response) != 0 {
 		res := domain.BuildResponseSuccess("success", response)
 		ctx.JSON(http.StatusOK, res)
 		return
