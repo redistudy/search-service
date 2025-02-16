@@ -44,7 +44,7 @@ env/
 .env
 
 # data pipeline
-/llm
+/llm/poetry.lock
 
 # docs
 /study
