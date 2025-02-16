@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "search-service"
+version = "0.1.0"
+description = ""
+authors = ["alstn1181030@gmail.com"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.11"
+langchain = "^0.3.18"
+transformers = "^4.47.1"
+langchain-huggingface = "^0.1.2"
+notebook = "^7.3.2"
+ipykernel = "^6.29.5"
+langchain-elasticsearch = "^0.3.0"
+pandas = "^2.2.3"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
+langchain-community = "^0.3.17"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[virtualenvs]
+create = true
+in-project = true
